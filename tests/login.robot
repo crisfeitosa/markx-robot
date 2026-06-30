@@ -8,8 +8,6 @@ Test Teardown    Finish session
 
 *** Test Cases ***
 Deve Logar com sucesso
-
-  Input Text       xpath=//*[@resource-id="apiIp"]       192.168.15.3
-  Click Element    xpath=//*[@resource-id="signInButton"] 
-
+  
+  Do Login
   Wait Until Page Contains    Minhas tarefas    5
