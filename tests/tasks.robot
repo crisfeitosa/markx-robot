@@ -11,6 +11,7 @@ Deve poder cadastrar uma nova tarefa
 
   Do Login
 
-  Create a new task    Estudar XPath
+  ${task}  Set Variable    Estudar XPath
 
-  Sleep    5s
+  Create a new task    ${task}
+  Should have task     ${task}

@@ -16,3 +16,10 @@ Create a new task
 
   Input Text       ${new_task_input}  ${task_name}
   Click Element    ${create_button}
+
+Should have task
+  [Arguments]    ${task_name}
+
+  Wait Until Element Is Visible
+  ...    xpath=//*[@resource-id="taskText"][@text="${task_name}"]
+  ...    5s
