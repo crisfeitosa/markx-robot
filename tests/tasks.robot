@@ -9,9 +9,9 @@ Test Teardown    Finish session
 *** Test Cases ***
 Deve poder cadastrar uma nova tarefa
 
+  ${task}  Set Variable        Estudar XPath
+  Remove task from database    ${task}
+
   Do Login
-
-  ${task}  Set Variable    Estudar XPath
-
   Create a new task    ${task}
   Should have task     ${task}
