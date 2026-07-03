@@ -33,3 +33,13 @@ Remove task by name
 
   Wait Until Element Is Visible       ${yes_button}    5
   Click Element                       ${yes_button}
+
+Finish task
+  [Arguments]    ${task_name}
+
+  Click Element        xpath=//*[@text="${task_name}"]/..
+
+Task should be done
+  [Arguments]   ${task_name}
+
+  Wait Until Element Is Visible    xpath=//*[@text="${task_name}"]/..//android.widget.ImageView    5
