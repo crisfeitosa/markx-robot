@@ -1,0 +1,20 @@
+1. Suíte: Tela Principal de Oferta (⁠image.png⁠)
+Esta suíte foca na tela inicial onde a oferta principal é apresentada ao usuário.
+ CT01 - Validar renderização de valores dinâmicos: Verificar se as variáveis de valor (ex: ⁠VALOR_CONTRATACAO_CONSIG⁠, ⁠TAXA_JUROS_CONSIG⁠) estão sendo renderizadas corretamente com dados reais do usuário (atualmente, a tela mostra as chaves do template não resolvidas, o que é um bug crítico).
+ CT02 - Interação com Endereço de Entrega: Clicar no botão "Editar" no bloco de endereço e validar se o usuário é redirecionado para a tela/modal de edição de endereço.
+ CT03 - Validação de Links de Termos: Clicar nos links "Crédito Consignado CLT" e "Proposta de Abertura de Conta" para garantir que abrem os PDFs ou modais correspondentes.
+ CT04 - Fluxo Positivo (Aceite): Clicar no botão primário "Abrir conta e simular Consignado" e validar o redirecionamento para o próximo passo do funil.
+ CT05 - Fluxo Negativo (Recusa): Clicar no botão secundário "Não quero conta e Consignado" e validar se a oferta é dispensada corretamente.
+ CT06 - Tooltip de Informação: Clicar no ícone de "i" (info) ao lado do título e validar o comportamento esperado (abertura de modal ou tooltip).
+2. Suíte: Modal "Benefícios da Conta" (⁠image_2.png⁠)
+Foca no modal intermediário que explica os benefícios gerais.
+ CT07 - Navegação para Detalhes da Conta: Clicar no link "Mais detalhes sobre a conta" e validar a abertura do modal correspondente (⁠image_3.png⁠).
+ CT08 - Navegação para Detalhes do Cartão: Clicar no link "Mais detalhes sobre o cartão" e validar a abertura do modal do cartão (⁠image_5.png⁠).
+ CT09 - Fechar Modal de Benefícios: Clicar no botão "Entendi" e validar se o modal é fechado, retornando o usuário à tela anterior com o estado preservado.
+3. Suíte: Modais de Detalhes Específicos (⁠image_3.png⁠, ⁠image_4.png⁠, ⁠image_5.png⁠)
+Valida os modais de informações detalhadas (termos, taxas e serviços).
+ CT10 - Validar Link de Tarifas: No modal "Mais detalhes sobre a conta", clicar no link "Tabela Geral de Tarifas" e verificar o direcionamento correto.
+ CT11 - Comportamento de Scroll: No modal de detalhes da conta (⁠image_3.png⁠ e ⁠image_4.png⁠), realizar o scroll até o final para garantir que todo o texto (como "Aplicação automática" e "Risco") seja legível e não fique cortado.
+ CT12 - Fechamento via "X": Clicar no ícone de "X" no canto superior direito (⁠image_3.png⁠) e garantir o fechamento da tela.
+ CT13 - Fechamento via Botão (Cartão): No modal de detalhes do cartão (⁠image_5.png⁠), clicar em "Entendi" e garantir que ele feche corretamente.
+
