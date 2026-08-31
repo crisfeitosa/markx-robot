@@ -1,20 +1,68 @@
-1. Suíte: Tela Principal de Oferta (⁠image.png⁠)
-Esta suíte foca na tela inicial onde a oferta principal é apresentada ao usuário.
- CT01 - Validar renderização de valores dinâmicos: Verificar se as variáveis de valor (ex: ⁠VALOR_CONTRATACAO_CONSIG⁠, ⁠TAXA_JUROS_CONSIG⁠) estão sendo renderizadas corretamente com dados reais do usuário (atualmente, a tela mostra as chaves do template não resolvidas, o que é um bug crítico).
- CT02 - Interação com Endereço de Entrega: Clicar no botão "Editar" no bloco de endereço e validar se o usuário é redirecionado para a tela/modal de edição de endereço.
- CT03 - Validação de Links de Termos: Clicar nos links "Crédito Consignado CLT" e "Proposta de Abertura de Conta" para garantir que abrem os PDFs ou modais correspondentes.
- CT04 - Fluxo Positivo (Aceite): Clicar no botão primário "Abrir conta e simular Consignado" e validar o redirecionamento para o próximo passo do funil.
- CT05 - Fluxo Negativo (Recusa): Clicar no botão secundário "Não quero conta e Consignado" e validar se a oferta é dispensada corretamente.
- CT06 - Tooltip de Informação: Clicar no ícone de "i" (info) ao lado do título e validar o comportamento esperado (abertura de modal ou tooltip).
-2. Suíte: Modal "Benefícios da Conta" (⁠image_2.png⁠)
-Foca no modal intermediário que explica os benefícios gerais.
- CT07 - Navegação para Detalhes da Conta: Clicar no link "Mais detalhes sobre a conta" e validar a abertura do modal correspondente (⁠image_3.png⁠).
- CT08 - Navegação para Detalhes do Cartão: Clicar no link "Mais detalhes sobre o cartão" e validar a abertura do modal do cartão (⁠image_5.png⁠).
- CT09 - Fechar Modal de Benefícios: Clicar no botão "Entendi" e validar se o modal é fechado, retornando o usuário à tela anterior com o estado preservado.
-3. Suíte: Modais de Detalhes Específicos (⁠image_3.png⁠, ⁠image_4.png⁠, ⁠image_5.png⁠)
-Valida os modais de informações detalhadas (termos, taxas e serviços).
- CT10 - Validar Link de Tarifas: No modal "Mais detalhes sobre a conta", clicar no link "Tabela Geral de Tarifas" e verificar o direcionamento correto.
- CT11 - Comportamento de Scroll: No modal de detalhes da conta (⁠image_3.png⁠ e ⁠image_4.png⁠), realizar o scroll até o final para garantir que todo o texto (como "Aplicação automática" e "Risco") seja legível e não fique cortado.
- CT12 - Fechamento via "X": Clicar no ícone de "X" no canto superior direito (⁠image_3.png⁠) e garantir o fechamento da tela.
- CT13 - Fechamento via Botão (Cartão): No modal de detalhes do cartão (⁠image_5.png⁠), clicar em "Entendi" e garantir que ele feche corretamente.
+Aqui está a estrutura de automação para esse fluxo, seguindo o padrão BDD que você já está utilizando no projeto.
 
+Dividi o código em duas partes: o Caso de Teste (para o seu arquivo `.robot`) e as Keywords/Locators (para o seu arquivo `.resource`).
+
+### 1. No arquivo de Testes (`consignado_varejo.robot`)
+
+Adicione este novo caso de teste logo após o `CT04`:
+
+```robotframework
+CT05 - Validar Modais de Termos no Footer da Oferta
+    [Documentation]    Garante que o usuário consegue abrir os links do footer, ler os termos e fechar os modais retornando para a oferta.
+    [Tags]             footer    termos_condicoes
+    Dado que estou na tela principal da oferta de Consignado Varejo
+    # Assumindo que a edição de endereço (CT02) já foi testada ou é um pré-requisito
+    Quando clico no link de "Crédito Consignado CLT" no footer
+    Então o modal de informações do consignado deve ser exibido
+    E fecho o modal de termos clicando em Entendi
+    Quando clico no link de "Proposta de Abertura de Conta" no footer
+    Então o modal da proposta de abertura deve ser exibido
+    E fecho o modal de termos clicando em Entendi
+
+```
+
+### 2. No arquivo de Recursos (`consignado_varejo.resource`)
+
+Adicione as novas variáveis e a implementação das keywords de BDD.
+
+**Na seção `*** Variables ***`:**
+
+```robotframework
+${MODAL_TITULO_CONSIGNADO}    xpath=//android.widget.TextView[@text="Mais informações antes de contratar o Consignado CLT"]
+${MODAL_TITULO_PAC}           xpath=//android.widget.TextView[contains(@text, "Proposta de Abertura")]  # Ajuste com o texto exato do título da tela de PAC
+${BTN_ENTENDI}                xpath=//android.widget.Button[@text="Entendi"]
+
+```
+
+**Na seção `*** Keywords ***`:**
+
+```robotframework
+# --- QUANDO ---
+
+Quando clico no link de "Crédito Consignado CLT" no footer
+    Scrollar Ate O Elemento Ficar Visivel    ${FOOTER_LINK_SAIBA_MAIS_CREDIARIO}    5
+    Click Element                            ${FOOTER_LINK_SAIBA_MAIS_CREDIARIO}
+
+Quando clico no link de "Proposta de Abertura de Conta" no footer
+    Scrollar Ate O Elemento Ficar Visivel    ${FOOTER_LINK_PAC_FOOTER}    5
+    Click Element                            ${FOOTER_LINK_PAC_FOOTER}
+
+# --- ENTÃO ---
+
+Então o modal de informações do consignado deve ser exibido
+    Wait Until Element Is Visible    ${MODAL_TITULO_CONSIGNADO}    timeout=5s
+
+Então o modal da proposta de abertura deve ser exibido
+    Wait Until Element Is Visible    ${MODAL_TITULO_PAC}    timeout=5s
+
+E fecho o modal de termos clicando em Entendi
+    # Reutiliza a sua keyword customizada de scroll para garantir que o botão apareça antes do clique
+    Scrollar Ate O Elemento Ficar Visivel    ${BTN_ENTENDI}    5
+    Click Element                            ${BTN_ENTENDI}
+    # Valida que o modal fechou e a tela de oferta voltou a ficar em foco
+    Wait Until Element Is Visible    ${TXT_TITULO_OFERTA}    timeout=5s
+
+```
+
+**Ponto de atenção na implementação:**
+Como os links do footer estão no final da tela principal, utilizei a sua keyword `Scrollar Ate O Elemento Ficar Visivel` antes dos cliques nos links `${FOOTER_LINK_SAIBA_MAIS_CREDIARIO}` e `${FOOTER_LINK_PAC_FOOTER}`. O mesmo se aplica ao botão `${BTN_ENTENDI}`, garantindo que a automação não falhe por intercepção de elemento caso a tela do dispositivo emulador seja menor e exija rolagem para revelar os botões.
